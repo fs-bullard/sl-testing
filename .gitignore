@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+output/*
+!output/.gitkeep
+# SDK binaries live on the Python path, never in the repo
+*.pyd
+*.dll
