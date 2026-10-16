@@ -3,6 +3,22 @@ from .errors import CameraError, CameraNotConnectedError
 from .sdk import require_sdk
 
 
+def _value(result):
+    """Getters may return (SLError, value) or a bare value."""
+    return result[1] if isinstance(result, tuple) else result
+
+
+def resolve_interface(name):
+    """Map 'usb' / 'gige' to a DeviceInterface member (GigE members are named Pleora/GigE)."""
+    sdk = require_sdk()
+    members = {n: getattr(sdk.DeviceInterface, n) for n in dir(sdk.DeviceInterface) if not n.startswith("_")}
+    wanted = ("usb",) if name == "usb" else ("gige", "pleora")
+    for n, member in members.items():
+        if any(w in n.lower() for w in wanted) and hasattr(member, "name"):
+            return member
+    raise CameraError(f"No DeviceInterface member matches '{name}'; found {sorted(members)}")
+
+
 class CameraDevice:
     def __init__(self, device=None, iface=None):
         """Pass `device` to inject a fake; otherwise a real SLDevice is built (USB by default)."""
@@ -19,19 +35,40 @@ class CameraDevice:
             raise CameraNotConnectedError(f"Failed to {op}: not connected")
         raise CameraError(f"Failed to {op}: {err}")
 
-    def open_camera(self, buffer_depth=10):
+    def _sdk(self):
+        return self.device.sdk if hasattr(self.device, "is_fake") else require_sdk()
+
+    def open_camera(self, buffer_depth=10, pvcfg_path=None):
+        if pvcfg_path:  # Pleora (GigE) only; must precede OpenCamera
+            self._check(self.device.SetPvcfgPath(pvcfg_path), "set pvcfg path")
         self._check(self.device.OpenCamera(buffer_depth), "open camera")
 
     def close_camera(self):
         self._check(self.device.CloseCamera(), "close camera")
 
-    def acquire(self, x_dim, y_dim, n_frames, exposure_ms, full_well=None):
-        """Configure, stream and capture n_frames; returns the SLImage stack."""
-        sdk = require_sdk() if not hasattr(self.device, "is_fake") else self.device.sdk
+    def setup(self, dds=False):
+        """One-time config after OpenCamera."""
+        self._check(self.device.SetExposureMode(self._sdk().ExposureModes.seq_mode), "set exposure mode")
+        self._check(self.device.SetDDS(dds), "set DDS")
+
+    def dims(self):
+        """(x_dim, y_dim)"""
+        return int(_value(self.device.GetImageXDim())), int(_value(self.device.GetImageYDim()))
+
+    def temperature(self, sensor=0):
+        """Sensor temperature, or None if unavailable (logging only, so never fatal)."""
+        try:
+            return float(_value(self.device.MeasureTemperature(sensor)))
+        except Exception:
+            return None
+
+    def acquire(self, x_dim, y_dim, n_frames, exposure_ms, full_well="High"):
+        """Configure, stream and capture n_frames on one trigger; returns the SLImage stack."""
+        sdk = self._sdk()
         self._check(self.device.SetExposureTime(exposure_ms), "set exposure time")
         self._check(self.device.SetNumberOfFrames(n_frames), "set number of frames")
         self._check(
-            self.device.SetFullWell(fullWell=full_well or sdk.FullWellModes.High),
+            self.device.SetFullWell(fullWell=getattr(sdk.FullWellModes, full_well)),
             "set full well",
         )
         self._check(self.device.StartStream(), "start stream")

@@ -21,6 +21,15 @@ python -m tests.<name>.run          # real hardware (Windows)
 python -m tests.<name>.run --fake   # FakeSLDevice, works on macOS
 ```
 
+Blooming test (`tests/blooming/`): `capture` takes darks (LED off) then brights (LED on) per exposure, low full well, no DDS, 3 frames per trigger. `analyze` corrects (bright mean − dark mean + 100), places ROIs, writes `metrics.csv` and `report.html` (per-exposure image plus a surface plot of each ROI).
+
+```
+python -m tests.blooming.capture --sensor M4 --iface usb      # --iface gige --pvcfg <file> for GigE; --fake to dry-run
+python -m tests.blooming.analyze output/blooming/M4/<timestamp> --pitch-um <um>
+```
+
+`rois.json` in the session folder is created on first analysis and reused (edit it to move ROIs; `--regen-rois` rebuilds).
+
 New test scripts should accept `--fake` and build `CameraDevice(device=FakeSLDevice())` when it is set. Extend `FakeSLDevice` as tests need more of the API. There is no linter or test runner configured.
 
 ## Environment constraints
