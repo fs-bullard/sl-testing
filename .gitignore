@@ -9,3 +9,5 @@ output/*
 # SDK binaries live on the Python path, never in the repo
 *.pyd
 *.dll
+
+data/
