@@ -2,6 +2,8 @@
 from .errors import CameraError, CameraNotConnectedError
 from .sdk import require_sdk
 
+ACQUIRE_MARGIN_MS = 2000  # readout and transfer allowance on top of the exposure time
+
 
 def _value(result):
     """Getters may return (SLError, value) or a bare value."""
@@ -51,6 +53,9 @@ class CameraDevice:
         self._check(self.device.SetExposureMode(self._sdk().ExposureModes.seq_mode), "set exposure mode")
         self._check(self.device.SetDDS(dds), "set DDS")
 
+    def register_write(self, addr, value):
+        self._check(self.device.RegisterWrite(addr, value), f"write register {addr}")
+
     def dims(self):
         """(x_dim, y_dim)"""
         return int(_value(self.device.GetImageXDim())), int(_value(self.device.GetImageYDim()))
@@ -75,8 +80,10 @@ class CameraDevice:
         try:
             self._check(self.device.SoftwareTrigger(), "software trigger")
             image = sdk.SLImage(x_dim, y_dim, n_frames)
+            # AcquireImage's timeout defaults to 1000 ms, so long exposures need a longer wait per frame
+            timeout_ms = int(exposure_ms) + ACQUIRE_MARGIN_MS
             for i in range(n_frames):
-                info = self.device.AcquireImage(image, frame=i)
+                info = self.device.AcquireImage(image, frame=i, timeout=timeout_ms)
                 self._check(info.error, f"acquire frame {i}")
             return image
         finally:

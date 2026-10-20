@@ -81,7 +81,7 @@ Construct with an interface: `SLDevice(DeviceInterface.USB)`.
 
 - `StartStream()` / `StopStream()` — "Every StartStream should be matched with a StopStream after all frames are captured."
 - `SoftwareTrigger()`
-- `AcquireImage(image, frame=n)` → `SLBufferInfo` (error is on `.error`)
+- `AcquireImage(image, frame=0, timeout=1000)` → `SLBufferInfo` (error is on `.error`). `timeout` is in ms and defaults to 1000, so exposures ≥ ~1 s fail with `SL_ERROR_TIMEOUT` unless it is raised. Overload `AcquireImage(buffer, timeout=1000)` also exists.
 - `GetLatestFrame(buf)` / `ReadFrame(buf)` — newest / oldest frame in the ring buffer
 - `GetFrameCount()` — "Can be used to poll for increments to see when new frames arrive"
 - `GoLiveWithAutoTrigger(thresholdADU)` — USB; "The device waits for the ADU to reach a relative threshold and then captures a sequence."

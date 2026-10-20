@@ -50,6 +50,7 @@ class FakeSLDevice:
     def CloseCamera(self): return self._ok
     def SetExposureMode(self, *a): return self._ok
     def SetDDS(self, *a): return self._ok
+    def RegisterWrite(self, *a): return self._ok
     def SetNumberOfFrames(self, *a): return self._ok
     def SetFullWell(self, **kw): return self._ok
     def StartStream(self): return self._ok
@@ -63,7 +64,7 @@ class FakeSLDevice:
         self.exposure_ms = ms
         return self._ok
 
-    def AcquireImage(self, image, frame=0):
+    def AcquireImage(self, image, frame=0, timeout=1000):
         t = self.exposure_ms
         h, w = image.frames[frame].shape
         yy, xx = np.mgrid[0:h, 0:w]

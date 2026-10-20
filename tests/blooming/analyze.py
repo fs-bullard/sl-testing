@@ -16,11 +16,20 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+import tifffile
 from matplotlib.patches import Rectangle
 
 OFFSET = 100
 SAT = 2**14 - 1
 ROI_NAMES = ["left", "right", "top", "bottom"]
+
+
+def read_stack(path):
+    """(n, y, x) frame stack; .npy kept for sessions captured before the switch to TIFF."""
+    if path.suffix == ".npy":
+        return np.load(path)
+    arr = tifffile.imread(path)
+    return arr.reshape(-1, *arr.shape[-2:])  # a single-frame TIFF reads back as 2-D
 
 
 def load(session):
@@ -29,8 +38,8 @@ def load(session):
     exps = sorted({e for k, e in caps if k == "bright"} & {e for k, e in caps if k == "dark"})
     data = {}
     for e in exps:
-        bright = np.load(session / caps[("bright", e)]["file"]).astype(float)
-        dark = np.load(session / caps[("dark", e)]["file"]).astype(float)
+        bright = read_stack(session / caps[("bright", e)]["file"]).astype(float)
+        dark = read_stack(session / caps[("dark", e)]["file"]).astype(float)
         corrected = np.clip(bright.mean(0) - dark.mean(0) + OFFSET, 0, SAT)
         data[e] = {"img": corrected, "frames": bright - dark.mean(0) + OFFSET,
                    "temp": caps[("bright", e)]["temp_after"],
@@ -39,22 +48,31 @@ def load(session):
 
 
 def make_rois(img, args):
-    """Place left/right/top/bottom ROIs around the core, plus a control in the farthest corner."""
+    """Place left/right/top/bottom ROIs around the core, plus a control in the farthest corner.
+
+    Every ROI is the same long x short rectangle (so equal area), with its long side
+    tangential to the core: top/bottom are wide, left/right are tall. The control is wide.
+    """
     h, w = img.shape
     ys, xs = np.nonzero(img > 0.5 * img.max())
     cx, cy = xs.mean(), ys.mean()
-    d = round(args.roi_dist_mm * 1000 / args.pitch_um)
-    s = round(args.roi_size_mm * 1000 / args.pitch_um)
-    centers = {"left": (cx - d, cy), "right": (cx + d, cy), "top": (cx, cy - d), "bottom": (cx, cy + d)}
+    px = lambda mm: round(mm * 1000 / args.pitch_um)
+    d, long, short = px(args.roi_dist_mm), px(args.roi_long_mm), px(args.roi_short_mm)
+    wide, tall = (long, short), (short, long)  # (width, height)
+    placed = {"left": (cx - d, cy, tall), "right": (cx + d, cy, tall),
+              "top": (cx, cy - d, wide), "bottom": (cx, cy + d, wide)}
     rois = {}
-    for name, (x, y) in centers.items():
-        x0, y0 = round(x - s / 2), round(y - s / 2)
-        if x0 < 0 or y0 < 0 or x0 + s > w or y0 + s > h:
-            raise SystemExit(f"{name} ROI falls outside the image; reduce --roi-dist-mm/--roi-size-mm")
-        rois[name] = [x0, y0, x0 + s, y0 + s]
-    corners = [(0, 0), (w - s, 0), (0, h - s), (w - s, h - s)]
-    x0, y0 = max(corners, key=lambda c: (c[0] + s / 2 - cx) ** 2 + (c[1] + s / 2 - cy) ** 2)
-    rois["control"] = [x0, y0, x0 + s, y0 + s]
+    for name, (x, y, (rw, rh)) in placed.items():
+        x0, y0 = round(x - rw / 2), round(y - rh / 2)
+        if x0 < 0 or y0 < 0 or x0 + rw > w or y0 + rh > h:
+            raise SystemExit(f"{name} ROI falls outside the image; reduce --roi-dist-mm/--roi-long-mm")
+        rois[name] = [x0, y0, x0 + rw, y0 + rh]
+    rw, rh = wide
+    if rw > w or rh > h:
+        raise SystemExit("control ROI is larger than the image; reduce --roi-long-mm")
+    corners = [(0, 0), (w - rw, 0), (0, h - rh), (w - rw, h - rh)]
+    x0, y0 = max(corners, key=lambda c: (c[0] + rw / 2 - cx) ** 2 + (c[1] + rh / 2 - cy) ** 2)
+    rois["control"] = [x0, y0, x0 + rw, y0 + rh]
     return {"core_xy": [cx, cy], "rois": rois}
 
 
@@ -162,7 +180,8 @@ def main():
     p.add_argument("session", type=lambda s: __import__("pathlib").Path(s))
     p.add_argument("--pitch-um", type=float, help="pixel pitch; needed when creating rois.json")
     p.add_argument("--roi-dist-mm", type=float, default=3.0, help="core-to-ROI-centre distance")
-    p.add_argument("--roi-size-mm", type=float, default=2.0)
+    p.add_argument("--roi-long-mm", type=float, default=4.0, help="ROI side tangential to the core")
+    p.add_argument("--roi-short-mm", type=float, default=1.2, help="ROI side radial to the core")
     p.add_argument("--regen-rois", action="store_true")
     p.add_argument("--zlim", type=float, nargs=2, help="fixed z-axis limits (ADU) for all surface plots")
     args = p.parse_args()

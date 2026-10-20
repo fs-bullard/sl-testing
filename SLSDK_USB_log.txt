@@ -1,0 +1,712 @@
+16-10-2026: 17:01:18.908: [INF] usbSDK: ----------**********----------
+16-10-2026: 17:01:18.910: [INF] usbSDK: Device constructor called
+16-10-2026: 17:01:18.910: [INF] usbSDK: SLSDK Version: 2.2.19.0
+16-10-2026: 17:01:18.911: [INF] usbSDK: SLDeviceLib.dll version: 2.2.19.0
+16-10-2026: 17:01:18.912: [INF] usbSDK: SLImage.dll version: 2.2.19.0
+16-10-2026: 17:01:18.913: [INF] usbSDK: SLHelperLibrary.dll version: 2.2.19.0
+16-10-2026: 17:01:18.913: [INF] usbSDK: SLDefectCorrection.dll version: 2.2.19.0
+16-10-2026: 17:01:18.914: [INF] usbSDK: SLInterfaceXDT.dll version: 2.2.19.0
+16-10-2026: 17:01:18.914: [INF] usbSDK: libxdtusb.dll version: 1.4.3.0
+16-10-2026: 17:01:18.916: [INF] usbSDK: libibdt.dll version: 1.0.2.0
+16-10-2026: 17:01:18.917: [INF] usbSDK: libusb-1.0.dll version: 1.0.24.11584
+16-10-2026: 17:01:18.917: [INF] usbSDK: libwinpthread-1.dll version: 1.0.0.0
+16-10-2026: 17:01:18.920: [INF] usbSDK: Opening camera
+16-10-2026: 17:01:18.954: [INF] usbSDK: Found 1 devices
+16-10-2026: 17:01:18.954: [INF] usbSDK: Connecting to device 1
+16-10-2026: 17:01:18.970: [INF] usbSDK: Device connected at USB speed: Super
+16-10-2026: 17:01:18.973: [INF] usbSDK: Starting heartbeat thread
+16-10-2026: 17:01:19.003: [INF] usbSDK: Detector type: 1, variant: 5
+16-10-2026: 17:01:19.003: [INF] usbSDK: Model Code: EIO_LCY_IS1510M4
+16-10-2026: 17:01:19.004: [INF] usbSDK: Number of sensors in array: 1
+16-10-2026: 17:01:19.004: [INF] usbSDK: Number of temperature sensors: 1
+16-10-2026: 17:01:19.005: [INF] usbSDK: Device image rounder: 1
+16-10-2026: 17:01:19.005: [INF] usbSDK: Successfully configured as: 1510HS
+16-10-2026: 17:01:19.009: [INF] usbSDK: Device Model Number: 1510
+16-10-2026: 17:01:19.015: [INF] usbSDK: Device Serial Number: 0
+16-10-2026: 17:01:19.019: [INF] usbSDK: Device FW: 1.11.0
+16-10-2026: 17:01:19.019: [INF] usbSDK: Setting exposure mode to seq_mode
+16-10-2026: 17:01:19.023: [INF] usbSDK: Set register 0 to 48
+16-10-2026: 17:01:19.023: [INF] usbSDK: Resetting exposure time to 1000 us after changing exposure mode
+16-10-2026: 17:01:19.023: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:01:19.024: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:01:19.025: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:01:19.025: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:01:19.029: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:01:19.033: [INF] usbSDK: Set exposure time to 10 us
+16-10-2026: 17:01:19.033: [INF] usbSDK: Setting DDS off
+16-10-2026: 17:02:30.325: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:30.327: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:02:30.327: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:02:30.330: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:02:30.331: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:02:30.337: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:02:30.340: [INF] usbSDK: Set exposure time to 83550 us
+16-10-2026: 17:02:30.342: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:02:30.344: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:02:30.345: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:02:30.389: [INF] usbSDK: Device started streaming
+16-10-2026: 17:02:30.549: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:02:30.899: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:02:31.030: [INF] usbSDK: Stream stopped
+16-10-2026: 17:02:31.088: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:31.112: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:31.115: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:02:31.115: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:02:31.118: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:02:31.120: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:02:31.124: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:02:31.127: [INF] usbSDK: Set exposure time to 183550 us
+16-10-2026: 17:02:31.128: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:02:31.129: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:02:31.131: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:02:31.164: [INF] usbSDK: Device started streaming
+16-10-2026: 17:02:31.348: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:02:31.997: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:02:32.026: [INF] usbSDK: Stream stopped
+16-10-2026: 17:02:32.048: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:32.064: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:32.065: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:02:32.066: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:02:32.069: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:02:32.070: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:02:32.075: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:02:32.081: [INF] usbSDK: Set exposure time to 483550 us
+16-10-2026: 17:02:32.083: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:02:32.084: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:02:32.087: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:02:32.115: [INF] usbSDK: Device started streaming
+16-10-2026: 17:02:32.300: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:02:33.848: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:02:33.877: [INF] usbSDK: Stream stopped
+16-10-2026: 17:02:33.902: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:33.917: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:33.918: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:02:33.923: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:02:33.929: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:02:33.930: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:02:33.934: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:02:33.938: [INF] usbSDK: Set exposure time to 733550 us
+16-10-2026: 17:02:33.939: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:02:33.940: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:02:33.942: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:02:33.968: [INF] usbSDK: Device started streaming
+16-10-2026: 17:02:34.157: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:02:36.457: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:02:36.494: [INF] usbSDK: Stream stopped
+16-10-2026: 17:02:36.547: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:36.563: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:02:36.564: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:02:36.565: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:02:36.566: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:02:36.567: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:02:36.570: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:02:36.574: [INF] usbSDK: Set exposure time to 983550 us
+16-10-2026: 17:02:36.575: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:02:36.578: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:02:36.579: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:02:36.614: [INF] usbSDK: Device started streaming
+16-10-2026: 17:02:36.783: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:02:37.803: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:02:37.829: [INF] usbSDK: Stream stopped
+16-10-2026: 17:02:37.830: [INF] usbSDK: Closing camera
+16-10-2026: 17:02:38.659: [INF] usbSDK: Finished heartbeat thread
+16-10-2026: 17:02:38.660: [INF] usbSDK: Closing device
+16-10-2026: 17:02:38.665: [INF] usbSDK: Successfully closed camera
+16-10-2026: 17:03:15.928: [INF] usbSDK: ----------**********----------
+16-10-2026: 17:03:15.929: [INF] usbSDK: Device constructor called
+16-10-2026: 17:03:15.929: [INF] usbSDK: SLSDK Version: 2.2.19.0
+16-10-2026: 17:03:15.929: [INF] usbSDK: SLDeviceLib.dll version: 2.2.19.0
+16-10-2026: 17:03:15.930: [INF] usbSDK: SLImage.dll version: 2.2.19.0
+16-10-2026: 17:03:15.930: [INF] usbSDK: SLHelperLibrary.dll version: 2.2.19.0
+16-10-2026: 17:03:15.930: [INF] usbSDK: SLDefectCorrection.dll version: 2.2.19.0
+16-10-2026: 17:03:15.931: [INF] usbSDK: SLInterfaceXDT.dll version: 2.2.19.0
+16-10-2026: 17:03:15.931: [INF] usbSDK: libxdtusb.dll version: 1.4.3.0
+16-10-2026: 17:03:15.931: [INF] usbSDK: libibdt.dll version: 1.0.2.0
+16-10-2026: 17:03:15.932: [INF] usbSDK: libusb-1.0.dll version: 1.0.24.11584
+16-10-2026: 17:03:15.932: [INF] usbSDK: libwinpthread-1.dll version: 1.0.0.0
+16-10-2026: 17:03:15.933: [INF] usbSDK: Opening camera
+16-10-2026: 17:03:15.952: [INF] usbSDK: Found 1 devices
+16-10-2026: 17:03:15.952: [INF] usbSDK: Connecting to device 1
+16-10-2026: 17:03:15.967: [INF] usbSDK: Device connected at USB speed: Super
+16-10-2026: 17:03:15.970: [INF] usbSDK: Starting heartbeat thread
+16-10-2026: 17:03:15.976: [INF] usbSDK: Detector type: 1, variant: 5
+16-10-2026: 17:03:15.977: [INF] usbSDK: Model Code: EIO_LCY_IS1510M4
+16-10-2026: 17:03:15.977: [INF] usbSDK: Number of sensors in array: 1
+16-10-2026: 17:03:15.978: [INF] usbSDK: Number of temperature sensors: 1
+16-10-2026: 17:03:15.978: [INF] usbSDK: Device image rounder: 1
+16-10-2026: 17:03:15.978: [INF] usbSDK: Successfully configured as: 1510HS
+16-10-2026: 17:03:15.983: [INF] usbSDK: Device Model Number: 1510
+16-10-2026: 17:03:15.989: [INF] usbSDK: Device Serial Number: 0
+16-10-2026: 17:03:15.993: [INF] usbSDK: Device FW: 1.11.0
+16-10-2026: 17:03:15.994: [INF] usbSDK: Setting exposure mode to seq_mode
+16-10-2026: 17:03:15.997: [INF] usbSDK: Set register 0 to 48
+16-10-2026: 17:03:15.998: [INF] usbSDK: Resetting exposure time to 1000 us after changing exposure mode
+16-10-2026: 17:03:15.998: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:15.999: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:15.000: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:15.001: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:16.004: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:16.008: [INF] usbSDK: Set exposure time to 10 us
+16-10-2026: 17:03:16.009: [INF] usbSDK: Setting DDS off
+16-10-2026: 17:03:18.659: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:18.660: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:18.661: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:18.663: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:18.664: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:18.668: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:18.672: [INF] usbSDK: Set exposure time to 83550 us
+16-10-2026: 17:03:18.673: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:03:18.674: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:03:18.676: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:03:18.709: [INF] usbSDK: Device started streaming
+16-10-2026: 17:03:18.879: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:03:19.228: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:03:19.264: [INF] usbSDK: Stream stopped
+16-10-2026: 17:03:19.286: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:19.302: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:19.303: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:19.304: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:19.306: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:19.307: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:19.310: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:19.314: [INF] usbSDK: Set exposure time to 183550 us
+16-10-2026: 17:03:19.315: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:03:19.318: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:03:19.319: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:03:19.346: [INF] usbSDK: Device started streaming
+16-10-2026: 17:03:19.530: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:03:20.179: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:03:20.214: [INF] usbSDK: Stream stopped
+16-10-2026: 17:03:20.242: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:20.266: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:20.267: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:20.267: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:20.271: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:20.271: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:20.276: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:20.280: [INF] usbSDK: Set exposure time to 483550 us
+16-10-2026: 17:03:20.281: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:03:20.282: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:03:20.284: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:03:20.313: [INF] usbSDK: Device started streaming
+16-10-2026: 17:03:20.497: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:03:22.047: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:03:22.074: [INF] usbSDK: Stream stopped
+16-10-2026: 17:03:22.095: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:22.110: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:22.111: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:22.112: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:22.113: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:22.114: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:22.117: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:22.124: [INF] usbSDK: Set exposure time to 733550 us
+16-10-2026: 17:03:22.125: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:03:22.128: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:03:22.132: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:03:22.163: [INF] usbSDK: Device started streaming
+16-10-2026: 17:03:22.354: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:03:24.653: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:03:24.684: [INF] usbSDK: Stream stopped
+16-10-2026: 17:03:24.707: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:24.724: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:03:24.726: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:03:24.727: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:03:24.730: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:03:24.731: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:03:24.736: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:03:24.742: [INF] usbSDK: Set exposure time to 983550 us
+16-10-2026: 17:03:24.743: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:03:24.745: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:03:24.747: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:03:24.780: [INF] usbSDK: Device started streaming
+16-10-2026: 17:03:24.953: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:03:25.965: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:03:25.990: [INF] usbSDK: Stream stopped
+16-10-2026: 17:03:25.991: [INF] usbSDK: Closing camera
+16-10-2026: 17:03:26.051: [INF] usbSDK: Finished heartbeat thread
+16-10-2026: 17:03:26.053: [INF] usbSDK: Closing device
+16-10-2026: 17:03:26.055: [INF] usbSDK: Successfully closed camera
+16-10-2026: 17:06:51.434: [INF] usbSDK: ----------**********----------
+16-10-2026: 17:06:51.434: [INF] usbSDK: Device constructor called
+16-10-2026: 17:06:51.434: [INF] usbSDK: SLSDK Version: 2.2.19.0
+16-10-2026: 17:06:51.435: [INF] usbSDK: SLDeviceLib.dll version: 2.2.19.0
+16-10-2026: 17:06:51.436: [INF] usbSDK: SLImage.dll version: 2.2.19.0
+16-10-2026: 17:06:51.436: [INF] usbSDK: SLHelperLibrary.dll version: 2.2.19.0
+16-10-2026: 17:06:51.436: [INF] usbSDK: SLDefectCorrection.dll version: 2.2.19.0
+16-10-2026: 17:06:51.437: [INF] usbSDK: SLInterfaceXDT.dll version: 2.2.19.0
+16-10-2026: 17:06:51.438: [INF] usbSDK: libxdtusb.dll version: 1.4.3.0
+16-10-2026: 17:06:51.438: [INF] usbSDK: libibdt.dll version: 1.0.2.0
+16-10-2026: 17:06:51.439: [INF] usbSDK: libusb-1.0.dll version: 1.0.24.11584
+16-10-2026: 17:06:51.439: [INF] usbSDK: libwinpthread-1.dll version: 1.0.0.0
+16-10-2026: 17:06:51.440: [INF] usbSDK: Opening camera
+16-10-2026: 17:06:51.466: [INF] usbSDK: Found 1 devices
+16-10-2026: 17:06:51.466: [INF] usbSDK: Connecting to device 1
+16-10-2026: 17:06:51.482: [INF] usbSDK: Device connected at USB speed: Super
+16-10-2026: 17:06:51.484: [INF] usbSDK: Starting heartbeat thread
+16-10-2026: 17:06:51.490: [INF] usbSDK: Detector type: 1, variant: 5
+16-10-2026: 17:06:51.490: [INF] usbSDK: Model Code: EIO_LCY_IS1510M4
+16-10-2026: 17:06:51.491: [INF] usbSDK: Number of sensors in array: 1
+16-10-2026: 17:06:51.492: [INF] usbSDK: Number of temperature sensors: 1
+16-10-2026: 17:06:51.492: [INF] usbSDK: Device image rounder: 1
+16-10-2026: 17:06:51.493: [INF] usbSDK: Successfully configured as: 1510HS
+16-10-2026: 17:06:51.497: [INF] usbSDK: Device Model Number: 1510
+16-10-2026: 17:06:51.503: [INF] usbSDK: Device Serial Number: 0
+16-10-2026: 17:06:51.507: [INF] usbSDK: Device FW: 1.11.0
+16-10-2026: 17:06:51.507: [INF] usbSDK: Setting exposure mode to seq_mode
+16-10-2026: 17:06:51.511: [INF] usbSDK: Set register 0 to 48
+16-10-2026: 17:06:51.511: [INF] usbSDK: Resetting exposure time to 1000 us after changing exposure mode
+16-10-2026: 17:06:51.511: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:51.512: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:51.513: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:51.513: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:51.517: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:51.521: [INF] usbSDK: Set exposure time to 10 us
+16-10-2026: 17:06:51.521: [INF] usbSDK: Setting DDS off
+16-10-2026: 17:06:52.998: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:52.999: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:52.000: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:52.002: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:52.003: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:53.007: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:53.011: [INF] usbSDK: Set exposure time to 83550 us
+16-10-2026: 17:06:53.011: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:06:53.013: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:06:53.015: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:06:53.051: [INF] usbSDK: Device started streaming
+16-10-2026: 17:06:53.221: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:06:53.570: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:06:53.597: [INF] usbSDK: Stream stopped
+16-10-2026: 17:06:53.664: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:53.681: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:53.682: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:53.682: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:53.685: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:53.685: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:53.689: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:53.694: [INF] usbSDK: Set exposure time to 183550 us
+16-10-2026: 17:06:53.694: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:06:53.697: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:06:53.699: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:06:53.729: [INF] usbSDK: Device started streaming
+16-10-2026: 17:06:53.914: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:06:54.564: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:06:54.591: [INF] usbSDK: Stream stopped
+16-10-2026: 17:06:54.633: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:54.664: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:54.664: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:54.665: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:54.667: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:54.667: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:54.671: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:54.674: [INF] usbSDK: Set exposure time to 483550 us
+16-10-2026: 17:06:54.675: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:06:54.676: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:06:54.678: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:06:54.705: [INF] usbSDK: Device started streaming
+16-10-2026: 17:06:54.885: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:06:56.434: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:06:56.470: [INF] usbSDK: Stream stopped
+16-10-2026: 17:06:56.510: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:56.535: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:56.536: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:56.537: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:56.539: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:56.539: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:56.543: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:56.549: [INF] usbSDK: Set exposure time to 733550 us
+16-10-2026: 17:06:56.550: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:06:56.551: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:06:56.553: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:06:56.587: [INF] usbSDK: Device started streaming
+16-10-2026: 17:06:56.765: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:06:59.065: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:06:59.093: [INF] usbSDK: Stream stopped
+16-10-2026: 17:06:59.152: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:59.172: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:06:59.173: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:06:59.175: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:06:59.178: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:06:59.178: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:06:59.182: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:06:59.185: [INF] usbSDK: Set exposure time to 983550 us
+16-10-2026: 17:06:59.186: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:06:59.188: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:06:59.190: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:06:59.220: [INF] usbSDK: Device started streaming
+16-10-2026: 17:06:59.407: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:07:00.427: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:07:00.453: [INF] usbSDK: Stream stopped
+16-10-2026: 17:07:00.454: [INF] usbSDK: Closing camera
+16-10-2026: 17:07:00.590: [INF] usbSDK: Finished heartbeat thread
+16-10-2026: 17:07:00.591: [INF] usbSDK: Closing device
+16-10-2026: 17:07:00.594: [INF] usbSDK: Successfully closed camera
+16-10-2026: 17:08:59.733: [INF] usbSDK: ----------**********----------
+16-10-2026: 17:08:59.734: [INF] usbSDK: Device constructor called
+16-10-2026: 17:08:59.734: [INF] usbSDK: SLSDK Version: 2.2.19.0
+16-10-2026: 17:08:59.735: [INF] usbSDK: SLDeviceLib.dll version: 2.2.19.0
+16-10-2026: 17:08:59.735: [INF] usbSDK: SLImage.dll version: 2.2.19.0
+16-10-2026: 17:08:59.736: [INF] usbSDK: SLHelperLibrary.dll version: 2.2.19.0
+16-10-2026: 17:08:59.736: [INF] usbSDK: SLDefectCorrection.dll version: 2.2.19.0
+16-10-2026: 17:08:59.737: [INF] usbSDK: SLInterfaceXDT.dll version: 2.2.19.0
+16-10-2026: 17:08:59.737: [INF] usbSDK: libxdtusb.dll version: 1.4.3.0
+16-10-2026: 17:08:59.738: [INF] usbSDK: libibdt.dll version: 1.0.2.0
+16-10-2026: 17:08:59.738: [INF] usbSDK: libusb-1.0.dll version: 1.0.24.11584
+16-10-2026: 17:08:59.738: [INF] usbSDK: libwinpthread-1.dll version: 1.0.0.0
+16-10-2026: 17:08:59.739: [INF] usbSDK: Opening camera
+16-10-2026: 17:08:59.759: [INF] usbSDK: Found 1 devices
+16-10-2026: 17:08:59.759: [INF] usbSDK: Connecting to device 1
+16-10-2026: 17:08:59.774: [INF] usbSDK: Device connected at USB speed: Super
+16-10-2026: 17:08:59.777: [INF] usbSDK: Starting heartbeat thread
+16-10-2026: 17:08:59.783: [INF] usbSDK: Detector type: 1, variant: 5
+16-10-2026: 17:08:59.783: [INF] usbSDK: Model Code: EIO_LCY_IS1510M4
+16-10-2026: 17:08:59.784: [INF] usbSDK: Number of sensors in array: 1
+16-10-2026: 17:08:59.784: [INF] usbSDK: Number of temperature sensors: 1
+16-10-2026: 17:08:59.784: [INF] usbSDK: Device image rounder: 1
+16-10-2026: 17:08:59.784: [INF] usbSDK: Successfully configured as: 1510HS
+16-10-2026: 17:08:59.788: [INF] usbSDK: Device Model Number: 1510
+16-10-2026: 17:08:59.794: [INF] usbSDK: Device Serial Number: 0
+16-10-2026: 17:08:59.798: [INF] usbSDK: Device FW: 1.11.0
+16-10-2026: 17:08:59.798: [INF] usbSDK: Setting exposure mode to seq_mode
+16-10-2026: 17:08:59.802: [INF] usbSDK: Set register 0 to 48
+16-10-2026: 17:08:59.802: [INF] usbSDK: Resetting exposure time to 1000 us after changing exposure mode
+16-10-2026: 17:08:59.803: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:08:59.803: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:08:59.805: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:08:59.805: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:08:59.809: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:08:59.813: [INF] usbSDK: Set exposure time to 10 us
+16-10-2026: 17:08:59.813: [INF] usbSDK: Setting DDS off
+16-10-2026: 17:09:00.915: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:00.916: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:00.917: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:00.920: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:00.920: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:00.924: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:00.929: [INF] usbSDK: Set exposure time to 83550 us
+16-10-2026: 17:09:00.930: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:00.932: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:00.934: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:00.971: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:01.139: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:01.489: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:01.634: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:01.661: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:01.709: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:01.709: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:01.710: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:01.711: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:01.711: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:01.715: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:01.720: [INF] usbSDK: Set exposure time to 183550 us
+16-10-2026: 17:09:01.720: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:01.722: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:01.724: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:01.750: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:01.926: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:02.576: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:02.603: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:02.657: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:02.705: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:02.706: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:02.706: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:02.708: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:02.708: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:02.712: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:02.716: [INF] usbSDK: Set exposure time to 483550 us
+16-10-2026: 17:09:02.719: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:02.721: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:02.724: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:02.756: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:02.934: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:04.483: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:04.508: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:04.562: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:04.610: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:04.610: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:04.611: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:04.613: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:04.614: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:04.619: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:04.623: [INF] usbSDK: Set exposure time to 733550 us
+16-10-2026: 17:09:04.623: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:04.625: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:04.627: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:04.654: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:04.840: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:07.141: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:07.176: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:07.215: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:07.294: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:07.295: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:07.295: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:07.297: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:07.298: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:07.302: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:07.306: [INF] usbSDK: Set exposure time to 983550 us
+16-10-2026: 17:09:07.306: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:07.308: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:07.310: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:07.336: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:07.517: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:10.567: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:10.595: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:10.660: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:10.714: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:10.714: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:10.715: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:10.716: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:10.716: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:10.720: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:10.724: [INF] usbSDK: Set exposure time to 1983550 us
+16-10-2026: 17:09:10.724: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:10.726: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:10.728: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:10.755: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:10.932: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:16.982: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:17.020: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:17.072: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:17.120: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:17.121: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:17.121: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:17.124: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:17.124: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:17.128: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:17.134: [INF] usbSDK: Set exposure time to 2983550 us
+16-10-2026: 17:09:17.134: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:17.136: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:17.138: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:17.163: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:17.350: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:26.400: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:26.429: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:26.481: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:26.538: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:26.539: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:26.539: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:26.541: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:26.542: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:26.547: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:26.550: [INF] usbSDK: Set exposure time to 3983550 us
+16-10-2026: 17:09:26.551: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:26.553: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:26.554: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:26.590: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:26.766: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:38.816: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:38.843: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:38.866: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:38.914: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:38.914: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:38.915: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:38.917: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:38.917: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:38.922: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:38.926: [INF] usbSDK: Set exposure time to 4983550 us
+16-10-2026: 17:09:38.927: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:38.930: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:38.931: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:38.958: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:39.135: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:09:54.184: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:09:54.212: [INF] usbSDK: Stream stopped
+16-10-2026: 17:09:54.267: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:54.315: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:09:54.316: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:09:54.316: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:09:54.319: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:09:54.320: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:09:54.325: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:09:54.328: [INF] usbSDK: Set exposure time to 6983550 us
+16-10-2026: 17:09:54.329: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:09:54.331: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:09:54.332: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:09:54.366: [INF] usbSDK: Device started streaming
+16-10-2026: 17:09:54.549: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:10:15.599: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:10:15.631: [INF] usbSDK: Stream stopped
+16-10-2026: 17:10:15.686: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:10:15.733: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:10:15.734: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:10:15.735: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:10:15.798: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:10:15.799: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:10:15.802: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:10:15.819: [INF] usbSDK: Set exposure time to 9983550 us
+16-10-2026: 17:10:15.820: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:10:15.821: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:10:15.823: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:10:15.854: [INF] usbSDK: Device started streaming
+16-10-2026: 17:10:16.032: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:10:46.082: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:10:46.215: [INF] usbSDK: Stream stopped
+16-10-2026: 17:10:46.273: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:12:12.896: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:12:12.897: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:12:12.898: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:12:12.900: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:12:12.901: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:12:12.904: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:12:12.908: [INF] usbSDK: Set exposure time to 83550 us
+16-10-2026: 17:12:12.909: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:12:12.911: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:12:12.914: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:12:12.939: [INF] usbSDK: Device started streaming
+16-10-2026: 17:12:13.117: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:12:13.467: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:12:13.492: [INF] usbSDK: Stream stopped
+16-10-2026: 17:12:13.524: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:12:43.582: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:12:43.584: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:12:43.584: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:12:43.586: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:12:43.587: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:12:43.590: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:12:43.594: [INF] usbSDK: Set exposure time to 183550 us
+16-10-2026: 17:12:43.595: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:12:43.596: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:12:43.598: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:12:43.629: [INF] usbSDK: Device started streaming
+16-10-2026: 17:12:43.814: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:12:44.464: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:12:44.503: [INF] usbSDK: Stream stopped
+16-10-2026: 17:12:44.537: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:13:14.600: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:13:14.602: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:13:14.602: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:13:14.604: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:13:14.605: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:13:14.608: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:13:14.612: [INF] usbSDK: Set exposure time to 483550 us
+16-10-2026: 17:13:14.613: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:13:14.614: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:13:14.616: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:13:14.648: [INF] usbSDK: Device started streaming
+16-10-2026: 17:13:14.820: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:13:16.369: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:13:16.498: [INF] usbSDK: Stream stopped
+16-10-2026: 17:13:16.541: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:13:46.616: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:13:46.617: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:13:46.618: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:13:46.620: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:13:46.621: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:13:46.625: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:13:46.629: [INF] usbSDK: Set exposure time to 733550 us
+16-10-2026: 17:13:46.630: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:13:46.632: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:13:46.634: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:13:46.663: [INF] usbSDK: Device started streaming
+16-10-2026: 17:13:46.846: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:13:49.145: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:13:49.172: [INF] usbSDK: Stream stopped
+16-10-2026: 17:13:49.203: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:14:19.273: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:14:19.273: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:14:19.274: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:14:19.276: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:14:19.276: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:14:19.280: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:14:19.284: [INF] usbSDK: Set exposure time to 983550 us
+16-10-2026: 17:14:19.284: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:14:19.286: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:14:19.288: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:14:19.320: [INF] usbSDK: Device started streaming
+16-10-2026: 17:14:19.495: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:14:22.544: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:14:22.677: [INF] usbSDK: Stream stopped
+16-10-2026: 17:14:22.751: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:14:52.844: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:14:52.845: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:14:52.846: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:14:52.849: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:14:52.850: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:14:52.856: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:14:52.860: [INF] usbSDK: Set exposure time to 1983550 us
+16-10-2026: 17:14:52.862: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:14:52.865: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:14:52.870: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:14:52.907: [INF] usbSDK: Device started streaming
+16-10-2026: 17:14:53.080: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:14:59.129: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:14:59.159: [INF] usbSDK: Stream stopped
+16-10-2026: 17:14:59.189: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:15:29.244: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:15:29.244: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:15:29.245: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:15:29.246: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:15:29.247: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:15:29.250: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:15:29.254: [INF] usbSDK: Set exposure time to 2983550 us
+16-10-2026: 17:15:29.255: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:15:29.256: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:15:29.258: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:15:29.284: [INF] usbSDK: Device started streaming
+16-10-2026: 17:15:29.474: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:15:38.524: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:15:38.656: [INF] usbSDK: Stream stopped
+16-10-2026: 17:15:38.681: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:16:08.735: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:16:08.736: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:16:08.737: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:16:08.739: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:16:08.740: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:16:08.744: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:16:08.748: [INF] usbSDK: Set exposure time to 3983550 us
+16-10-2026: 17:16:08.748: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:16:08.750: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:16:08.752: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:16:08.782: [INF] usbSDK: Device started streaming
+16-10-2026: 17:16:08.960: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:16:21.010: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:16:21.038: [INF] usbSDK: Stream stopped
+16-10-2026: 17:16:21.075: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:16:51.127: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:16:51.127: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:16:51.128: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:16:51.130: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:16:51.131: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:16:51.135: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:16:51.139: [INF] usbSDK: Set exposure time to 4983550 us
+16-10-2026: 17:16:51.139: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:16:51.141: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:16:51.143: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:16:51.173: [INF] usbSDK: Device started streaming
+16-10-2026: 17:16:51.354: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:17:06.398: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:17:06.433: [INF] usbSDK: Stream stopped
+16-10-2026: 17:17:06.485: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:17:36.557: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:17:36.558: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:17:36.559: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:17:36.561: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:17:36.562: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:17:36.568: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:17:36.571: [INF] usbSDK: Set exposure time to 6983550 us
+16-10-2026: 17:17:36.572: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:17:36.574: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:17:36.579: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:17:36.613: [INF] usbSDK: Device started streaming
+16-10-2026: 17:17:36.788: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:17:57.838: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:17:57.867: [INF] usbSDK: Stream stopped
+16-10-2026: 17:17:57.905: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:18:27.960: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:18:27.961: [INF] usbSDK: Setting exposure time
+16-10-2026: 17:18:27.962: [INF] usbSDK: Getting exposure mode
+16-10-2026: 17:18:27.965: [INF] usbSDK: Got exposure mode: seq_mode
+16-10-2026: 17:18:27.966: [INF] usbSDK: Exposure mode is a sequence mode so subtracting the readout time
+16-10-2026: 17:18:27.970: [INF] usbSDK: Readout time: 16450 us
+16-10-2026: 17:18:27.974: [INF] usbSDK: Set exposure time to 9983550 us
+16-10-2026: 17:18:27.974: [INF] usbSDK: Setting number of sequence frames to 3
+16-10-2026: 17:18:27.976: [INF] usbSDK: Setting full well mode: Low
+16-10-2026: 17:18:27.978: [INF] usbSDK: Calling StartStream
+16-10-2026: 17:18:28.008: [INF] usbSDK: Device started streaming
+16-10-2026: 17:18:28.184: [INF] usbSDK: Sent software trigger
+16-10-2026: 17:18:58.234: [INF] usbSDK: Calling StopStream
+16-10-2026: 17:18:58.267: [INF] usbSDK: Stream stopped
+16-10-2026: 17:18:58.303: [INF] usbSDK: Read temperature as: 2.250000
+16-10-2026: 17:19:53.387: [INF] usbSDK: Closing camera
+16-10-2026: 17:19:54.176: [INF] usbSDK: Finished heartbeat thread
+16-10-2026: 17:19:54.177: [INF] usbSDK: Closing device
+16-10-2026: 17:19:54.180: [INF] usbSDK: Successfully closed camera
