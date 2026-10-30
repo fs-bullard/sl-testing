@@ -32,6 +32,12 @@ On real hardware `capture` pauses with an `input()` prompt for the operator to s
 
 ROIs are equal-area `--roi-long-mm` × `--roi-short-mm` rectangles `--roi-dist-mm` from the core, long side tangential (top/bottom wide, left/right tall), plus a wide control in the farthest corner. `rois.json` in the session folder is created on first analysis and reused (edit it to move ROIs; `--regen-rois` rebuilds).
 
+Pixel-bias data (`data/pix_bias/<N>ms/`, 3-frame uint16 TIFFs for 10/20 uA with matching `dark_` files): `python -m tests.pix_bias.correct` writes mean(bright) − mean(dark) + 100 as float32 `<N>ms_pbc_<bias>uA_dc.tif` to `output/pix_bias/`.
+
+`python -m tests.pix_bias.report` then compares 10 vs 20 uA: row-band profiles left and right of the saturated spot (log scale, plus 20−10 difference) per exposure, written to `output/pix_bias/report.html` and `profiles.csv`.
+
+Intensity sweeps (`data/intensity_sweep/<sweep>/`, files `<P>_pc_<rest>.tif` with a matching `dark_<rest>.tif`, any frame count): `python -m tests.intensity_sweep.correct` writes `output/intensity_sweep/<sweep>/<P>pc_dc.tif` (reuses `tests.pix_bias.correct.correct`). `python -m tests.intensity_sweep.analyze <sweep>` reports two contrasts against intensity and spot overdrive: the inner box against its surround, and the light-box footprint against just outside it. Overdrive for saturated images is P(0)/P(R), using the radial profile P of the brightest unsaturated image and the saturated-disc radius R, so it doesn't assume a linear LED. Region rectangles are per sweep in `REGIONS` (CLI-overridable); add an entry for each new sweep and check it on the report's overview image.
+
 New test scripts should accept `--fake` and build `CameraDevice(device=FakeSLDevice())` when it is set. Extend `FakeSLDevice` as tests need more of the API.
 
 How the fake plugs in: `CameraDevice._sdk()` returns `device.sdk` when the device has `is_fake`, otherwise the real module from `sl_common.sdk.require_sdk()`. So any SDK type `CameraDevice` touches (`SLImage`, `FullWellModes`, `ExposureModes`, ...) must also be added to `FakeSLDevice.sdk`. `_check` compares `err.name` rather than identity, so the fake's own `SLError` enum works. Getters go through `_value()`, which accepts a `(SLError, value)` tuple or a bare value. There is no linter or test runner configured.
