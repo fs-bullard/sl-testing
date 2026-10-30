@@ -64,12 +64,11 @@ class FakeSLDevice:
         self.exposure_ms = ms
         return self._ok
 
-    def AcquireImage(self, image, frame=0, timeout=1000):
-        t = self.exposure_ms
-        h, w = image.frames[frame].shape
+    def signal(self, t, h, w):
+        """Noise-free, unclipped pixel values after integrating for t ms (offset included)."""
         yy, xx = np.mgrid[0:h, 0:w]
         cy, cx = h * 0.6, w * 0.5
-        raw = 100 + 0.002 * t * (1 + 0.05 * (self.temp - 25)) + np.random.normal(0, 3, (h, w))
+        raw = 100 + 0.002 * t * (1 + 0.05 * (self.temp - 25)) + np.zeros((h, w))
         if self.led_on:
             flux = 40 * t  # ADU the core would reach without saturating
             r2 = (xx - cx) ** 2 + (yy - cy) ** 2
@@ -78,6 +77,13 @@ class FakeSLDevice:
             streak = np.exp(-np.abs(dy) / 60) * np.exp(-((xx - cx) ** 2) / (2 * 8**2)) * np.where(dy > 0, 1, 0.3)
             bloom = 5e-5 * max(flux - FULL_SCALE, 0) * streak
             raw = raw + np.minimum(flux * np.exp(-r2 / (2 * 12**2)), FULL_SCALE) + glare + bloom
+        return raw
+
+    def AcquireImage(self, image, frame=0, timeout=1000):
+        t = self.exposure_ms
+        h, w = image.frames[frame].shape
+        raw = self.signal(t, h, w) + np.random.normal(0, 3, (h, w))
+        if self.led_on:
             self.temp += 0.002 * t / 1000
         image.frames[frame] = np.clip(raw, 0, FULL_SCALE).astype(np.uint16)
         return types.SimpleNamespace(error=self._ok)

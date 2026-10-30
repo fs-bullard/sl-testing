@@ -38,6 +38,13 @@ Pixel-bias data (`data/pix_bias/<N>ms/`, 3-frame uint16 TIFFs for 10/20 uA with 
 
 Intensity sweeps (`data/intensity_sweep/<sweep>/`, files `<P>_pc_<rest>.tif` with a matching `dark_<rest>.tif`, any frame count): `python -m tests.intensity_sweep.correct` writes `output/intensity_sweep/<sweep>/<P>pc_dc.tif` (reuses `tests.pix_bias.correct.correct`). `python -m tests.intensity_sweep.analyze <sweep>` reports two contrasts against intensity and spot overdrive: the inner box against its surround, and the light-box footprint against just outside it. Overdrive for saturated images is P(0)/P(R), using the radial profile P of the brightest unsaturated image and the saturated-disc radius R, so it doesn't assume a linear LED. Region rectangles are per sweep in `REGIONS` (CLI-overridable); add an entry for each new sweep and check it on the report's overview image.
 
+NDR test (`tests/ndr/`, GigE only): `capture` records destructive reference captures at each read time, then `--repeats` NDR integrations (one reset, `--reads` reads `--interval` ms apart) per light state. The NDR hardware calls are placeholders in `tests/ndr/ndr.py` (`SdkNdr`, marked `TODO(NDR)`). `FakeNdr` simulates the ramp from `FakeSLDevice.signal()`. `analyze` checks that reads are non-destructive (read-to-read increments), linearity, NDR slope against the destructive reference, and noise (second differences / √6). It also writes per-pixel slope maps, using only reads before a pixel saturates.
+
+```
+python -m tests.ndr.capture --sensor M5 --pvcfg <file>     # --fake to dry-run
+python -m tests.ndr.analyze output/ndr/M5/<timestamp>
+```
+
 New test scripts should accept `--fake` and build `CameraDevice(device=FakeSLDevice())` when it is set. Extend `FakeSLDevice` as tests need more of the API.
 
 How the fake plugs in: `CameraDevice._sdk()` returns `device.sdk` when the device has `is_fake`, otherwise the real module from `sl_common.sdk.require_sdk()`. So any SDK type `CameraDevice` touches (`SLImage`, `FullWellModes`, `ExposureModes`, ...) must also be added to `FakeSLDevice.sdk`. `_check` compares `err.name` rather than identity, so the fake's own `SLError` enum works. Getters go through `_value()`, which accepts a `(SLError, value)` tuple or a bare value. There is no linter or test runner configured.
