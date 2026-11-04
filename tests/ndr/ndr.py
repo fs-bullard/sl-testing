@@ -5,17 +5,17 @@ should hold more signal than the last (an "up-the-ramp" sequence). Both backends
 (reads, read_times_ms): reads is uint16 (n, y, x), read_times_ms is the integration time at
 each read, measured from the reset.
 
-SdkNdr is the real-hardware path and is mostly placeholders: search for TODO(NDR).
-FakeNdr simulates the ramp on FakeSLDevice so capture and analysis run without hardware.
+NDR is switched on by writing 0 to register 40 and off by writing 1 (NDR_REGISTER).
+SdkNdr is the real-hardware path. How the reads arrive once NDR is on is still an assumption:
+see TODO(NDR) in SdkNdr.acquire. FakeNdr simulates the ramp on FakeSLDevice so capture and
+analysis run without hardware; it makes the same register writes.
 """
 import numpy as np
 
 from sl_common.fake import FULL_SCALE
 
-# TODO(NDR): register addresses/values (or SDK calls) that switch NDR on and off, once known.
-# Whatever configure() writes is logged in meta.json via `settings`.
-NDR_REGISTERS_ON = {}
-NDR_REGISTERS_OFF = {}
+NDR_REGISTER = 40
+NDR_ON, NDR_OFF = 0, 1  # note: 0 enables, 1 disables
 
 
 def nominal_read_times(n_reads, interval_ms):
@@ -23,63 +23,61 @@ def nominal_read_times(n_reads, interval_ms):
     return [interval_ms * (k + 1) for k in range(n_reads)]
 
 
-class SdkNdr:
-    """NDR on a real detector through SLDevicePythonWrapper. Placeholders until the mechanism is known."""
+class _RegisterSwitch:
+    """Turns NDR on/off through register 40; shared by the real and fake backends."""
 
     def __init__(self, cam):
         self.cam = cam
-        self.settings = {}
+        self.settings = {"register": NDR_REGISTER, "on_value": NDR_ON, "off_value": NDR_OFF}
 
-    def configure(self, n_reads, interval_ms):
+    def configure(self, n_reads, interval_ms, full_well="High"):
         """Put the detector into NDR mode with n_reads reads, interval_ms apart."""
-        # TODO(NDR): switch the sensor to non-destructive readout. Candidates:
-        #   - register writes:  for addr, value in NDR_REGISTERS_ON.items(): self.cam.register_write(addr, value)
-        #   - an SDK call or exposure mode, if the wrapper exposes one (check dir(SLDevice), help(ExposureModes))
-        #   - a firmware or .pvcfg option on the Pleora GigE side
-        # Also set how many reads per reset and their spacing (interval_ms), if the hardware allows it.
-        # Record everything written in self.settings so it lands in meta.json.
-        raise NotImplementedError("TODO(NDR): configure NDR mode in tests/ndr/ndr.py")
+        self.cam.register_write(NDR_REGISTER, NDR_ON)
+        self.settings.update(n_reads=n_reads, interval_ms=interval_ms, full_well=full_well, enabled=True)
+
+    def disable(self):
+        """Return to normal destructive readout. Called in finally blocks, so it never raises."""
+        try:
+            self.cam.register_write(NDR_REGISTER, NDR_OFF)
+            self.settings["enabled"] = False
+        except Exception as e:
+            print(f"WARNING: failed to disable NDR (write {NDR_OFF} to register {NDR_REGISTER}): {e}")
+
+
+class SdkNdr(_RegisterSwitch):
+    """NDR on a real detector through SLDevicePythonWrapper."""
 
     def acquire(self, n_reads, interval_ms):
         """One reset, n_reads non-destructive reads. Returns (reads uint16 (n, y, x), read_times_ms)."""
-        # TODO(NDR): capture the reads of one integration. One possible shape, if NDR reads arrive as
-        # successive frames of a single triggered sequence:
-        #
-        #   dev, sdk = self.cam.device, self.cam._sdk()
-        #   x, y = self.cam.dims()
-        #   self.cam._check(dev.SetNumberOfFrames(n_reads), "set number of reads")
-        #   self.cam._check(dev.StartStream(), "start stream")
-        #   try:
-        #       self.cam._check(dev.SoftwareTrigger(), "software trigger")
-        #       image = sdk.SLImage(x, y, n_reads)
-        #       for i in range(n_reads):
-        #           info = dev.AcquireImage(image, frame=i, timeout=int(interval_ms) + 2000)
-        #           self.cam._check(info.error, f"NDR read {i}")   # GigE may report MISSING_PACKETS / RESENDS
-        #   finally:
-        #       dev.StopStream()
-        #   reads = np.stack([image.Frame2Array(i).copy() for i in range(n_reads)])
-        #
-        # Read times: use hardware timestamps if SLBufferInfo carries them, otherwise nominal_read_times().
-        raise NotImplementedError("TODO(NDR): acquire NDR reads in tests/ndr/ndr.py")
-
-    def disable(self):
-        """Return to normal destructive readout. Called in a finally block, so it must not raise."""
-        # TODO(NDR): undo configure(), e.g. write NDR_REGISTERS_OFF. Wrap in try/except and log on failure.
-        pass
+        # TODO(NDR): unverified assumption: with NDR on, one triggered sequence of n_reads frames returns
+        # successive non-destructive reads of a single integration, one per exposure period. Check it on
+        # hardware: analyze's min_increment_z should be clearly positive under light. If the reads arrive
+        # differently, change this method only.
+        cam, dev, sdk = self.cam, self.cam.device, self.cam._sdk()
+        x, y = cam.dims()
+        cam._check(dev.SetExposureTime(interval_ms), "set NDR read interval")
+        cam._check(dev.SetNumberOfFrames(n_reads), "set number of NDR reads")
+        cam._check(dev.SetFullWell(fullWell=getattr(sdk.FullWellModes, self.settings["full_well"])), "set full well")
+        cam._check(dev.StartStream(), "start stream")
+        try:
+            cam._check(dev.SoftwareTrigger(), "software trigger")
+            image = sdk.SLImage(x, y, n_reads)
+            for i in range(n_reads):
+                info = dev.AcquireImage(image, frame=i, timeout=int(interval_ms) + 2000)
+                cam._check(info.error, f"NDR read {i}")  # GigE may report MISSING_PACKETS / RESENDS
+        finally:
+            dev.StopStream()
+        reads = np.stack([image.Frame2Array(i).copy() for i in range(n_reads)])
+        # TODO(NDR): use hardware timestamps if SLBufferInfo carries them
+        return reads, nominal_read_times(n_reads, interval_ms)
 
 
-class FakeNdr:
+class FakeNdr(_RegisterSwitch):
     """Simulated up-the-ramp reads using FakeSLDevice's scene (LED state, dark current, saturating spot)."""
 
-    READ_NOISE_ADU = 3.0
-    GAIN_ADU_PER_E = 0.25  # sets shot noise
-
     def __init__(self, cam):
-        self.cam = cam
-        self.settings = {"simulated": True}
-
-    def configure(self, n_reads, interval_ms):
-        self.settings.update(n_reads=n_reads, interval_ms=interval_ms)
+        super().__init__(cam)
+        self.settings["simulated"] = True
 
     def acquire(self, n_reads, interval_ms):
         dev = self.cam.device
@@ -90,11 +88,8 @@ class FakeNdr:
         reads, prev_t = [], 0
         for t in times:
             mean_step = np.maximum(dev.signal(t, y, x) - dev.signal(prev_t, y, x), 0)
-            level = level + rng.normal(mean_step, np.sqrt(mean_step * self.GAIN_ADU_PER_E))  # charge accumulates
-            read = level + rng.normal(0, self.READ_NOISE_ADU, level.shape)  # read noise is fresh each read
+            level = level + rng.normal(mean_step, np.sqrt(mean_step * dev.GAIN_ADU_PER_E))  # charge accumulates
+            read = level + rng.normal(0, dev.READ_NOISE_ADU, level.shape)  # read noise is fresh each read
             reads.append(np.clip(read, 0, FULL_SCALE).astype(np.uint16))
             prev_t = t
         return np.stack(reads), times
-
-    def disable(self):
-        pass

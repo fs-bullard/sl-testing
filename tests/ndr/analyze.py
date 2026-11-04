@@ -10,8 +10,16 @@ Checks, per light state:
   and each read vs the reference at the same exposure.
 - Noise: std of second differences (r[k+1] - 2 r[k] + r[k-1]) / sqrt(6). A linear ramp cancels, so
   spatial variation in signal rate doesn't leak in; for a dark ramp this is the read noise.
-ROI statistics use only pixels that stay below saturation in every NDR read of that light state.
 - Per-pixel up-the-ramp slope map (ADU/ms), using only the reads before a pixel saturates.
+- SNR table (needs >= 2 repeats): signal and temporal noise of three estimators of the same
+  exposure, each pooled over ROI pixels as mean(signal) / sqrt(mean(per-pixel variance across repeats)):
+    ramp   slope fit through all reads x integration time T (last read time)
+    CDS    last read - first read
+    single one destructive reference frame at T minus the dark reference (needs dark refs and >= 2 ref frames)
+  Pooling the per-pixel variance across repeats keeps fixed-pattern noise out of the noise term.
+- Sensor metrics: read noise (dark 2nd-difference noise), conversion gain from the CDS photon
+  transfer var = gain * mean + 2 * read_noise^2 (bright), dark current, bias and dynamic range.
+ROI statistics use only pixels that stay below saturation in every NDR read of that light state.
 """
 import argparse
 import base64
@@ -61,6 +69,21 @@ def slope_map(reads, t, chunk=256):
     return slope, used
 
 
+def pooled_snr(samples):
+    """samples (repeats, pixels): mean signal, pooled temporal noise and their ratio."""
+    if len(samples) < 2:
+        return np.nan, np.nan, np.nan
+    signal = float(samples.mean())
+    noise = float(np.sqrt(samples.var(axis=0, ddof=1).mean()))
+    return signal, noise, signal / noise if noise > 0 else np.nan
+
+
+def pixel_slopes(px, t):
+    """Least-squares slope per pixel; px is (reads, pixels)."""
+    tc = t - t.mean()
+    return (tc[:, None] * px).sum(0) / (tc ** 2).sum()
+
+
 def line_fit(t, y):
     a, b = np.polyfit(t, y, 1)
     resid = np.asarray(y) - (a * np.asarray(t) + b)
@@ -83,7 +106,7 @@ def main():
     x0, y0, x1, y1 = args.roi or (w // 4, h // 4, 3 * w // 4, 3 * h // 4)
     roi = (slice(y0, y1), slice(x0, x1))
 
-    rows, sections = [], []
+    rows, sections, snr_rows, sensor = [], [], [], {}
     for state in states:
         ndr_caps = [c for c in caps if c["kind"] == "ndr" and c["light"] == state]
         ref_caps = sorted((c for c in caps if c["kind"] == "reference" and c["light"] == state),
@@ -93,6 +116,41 @@ def main():
         ref_t = [c["exposure_ms"] for c in ref_caps]
         ref_mean = [stack(args.session / c["file"])[(slice(None), *roi)][:, ok].mean() for c in ref_caps]
         ref_slope = line_fit(ref_t, ref_mean)[0] if len(ref_t) >= 2 else np.nan
+
+        # SNR of ramp fit, CDS and a single destructive frame, all at the same integration time T
+        t_all = np.asarray(ndr_caps[0]["read_times_ms"], float)
+        T = t_all[-1]
+        px = [r[(slice(None), *roi)][:, ok].astype(np.float64) for r in ndr_reads]
+        slopes_px = np.stack([pixel_slopes(q, t_all) for q in px])
+        ramp = pooled_snr(slopes_px * T)
+        cds_samples = np.stack([q[-1] - q[0] for q in px])
+        cds = pooled_snr(cds_samples)
+        single = (np.nan, np.nan, np.nan)
+        ref_T = next((c for c in ref_caps if abs(c["exposure_ms"] - T) < 1e-6), None)
+        dark_T = next((c for c in caps if c["kind"] == "reference" and c["light"] == "dark"
+                       and abs(c["exposure_ms"] - T) < 1e-6), None)
+        if state == "bright" and ref_T and dark_T:
+            b = stack(args.session / ref_T["file"])[(slice(None), *roi)][:, ok].astype(np.float64)
+            d = stack(args.session / dark_T["file"])[(slice(None), *roi)][:, ok].astype(np.float64)
+            if len(b) >= 2:
+                sig = (b.mean(0) - d.mean(0)).mean()
+                noise = np.sqrt(b.var(axis=0, ddof=1).mean())
+                single = (sig, noise, sig / noise)
+        mean_slope = slopes_px.mean(0)
+        snr_rows.append({"light": state, "repeats": len(px), "reads": len(t_all), "integration_ms": T,
+                         "ramp_signal_adu": ramp[0], "ramp_noise_adu": ramp[1], "snr_ramp": ramp[2],
+                         "cds_signal_adu": cds[0], "cds_noise_adu": cds[1], "snr_cds": cds[2],
+                         "single_signal_adu": single[0], "single_noise_adu": single[1], "snr_single": single[2],
+                         "ramp_vs_cds": ramp[2] / cds[2], "ramp_vs_single": ramp[2] / single[2],
+                         "spatial_spread_pct": 100 * mean_slope.std() / abs(mean_slope.mean()) if mean_slope.mean() else np.nan})
+        if state == "dark":
+            sensor["dark_current_adu_per_s"] = float(mean_slope.mean() * 1000)
+            sensor["bias_adu"] = float(np.mean([q[0].mean() for q in px]) - mean_slope.mean() * t_all[0])
+            if len(t_all) >= 3:
+                sensor["read_noise_adu"] = float(np.median(np.concatenate(
+                    [np.diff(q, n=2, axis=0).std(1) / np.sqrt(6) for q in px])))
+        else:
+            sensor["_cds"] = (cds[0], cds[1])
 
         fig, ax = plt.subplots(2, 2, figsize=(13, 8))
         slopes = []
@@ -113,7 +171,7 @@ def main():
                          "slope_ratio": a / ref_slope if ref_slope else np.nan, "intercept_adu": b, "r2": r2,
                          "max_abs_resid_adu": np.abs(resid).max(), "min_increment_adu": inc.min(),
                          "min_increment_z": inc_z.min(), "noise_adu": float(np.median(noise)),
-                         "max_read_vs_ref_adu": np.nanmax(np.abs(mean - ref_at)),
+                         "max_read_vs_ref_adu": float(np.nanmax(np.abs(mean - ref_at))) if ref_t else np.nan,
                          "pixels_saturating": int((used < len(reads)).sum()), "roi_pixels_used": int(ok.sum())})
             lbl = f"rep {c['repeat']}"
             ax[0, 0].plot(t, mean, "o-", ms=3, label=lbl)
@@ -149,13 +207,37 @@ def main():
         wr.writeheader()
         wr.writerows(rows)
 
+    # sensor metrics: photon transfer on the bright CDS needs the dark read noise
+    rn = sensor.get("read_noise_adu", np.nan)
+    cds_mean, cds_noise = sensor.pop("_cds", (np.nan, np.nan))
+    gain = (cds_noise ** 2 - 2 * rn ** 2) / cds_mean if cds_mean and cds_mean > 0 else np.nan
+    gain = gain if gain > 0 else np.nan
+    sensor["conversion_gain_adu_per_e"] = gain
+    sensor["read_noise_e"] = rn / gain
+    sensor["dark_current_e_per_s"] = sensor.get("dark_current_adu_per_s", np.nan) / gain
+    sensor["dynamic_range_db"] = 20 * np.log10((SAT - sensor.get("bias_adu", np.nan)) / rn)
+    with open(args.session / "snr.csv", "w", newline="") as f:
+        wr = csv.DictWriter(f, fieldnames=list(snr_rows[0]))
+        wr.writeheader()
+        wr.writerows(snr_rows)
+    with open(args.session / "sensor_metrics.csv", "w", newline="") as f:
+        wr = csv.writer(f)
+        wr.writerow(["metric", "value"])
+        wr.writerows(sensor.items())
+
     cols = ["light", "repeat", "ndr_slope_adu_per_ms", "ref_slope_adu_per_ms", "slope_ratio", "r2",
             "max_abs_resid_adu", "min_increment_z", "noise_adu", "max_read_vs_ref_adu", "pixels_saturating",
             "roi_pixels_used"]
-    fmt = lambda v: f"{v:.4g}" if isinstance(v, float) else str(v)
-    table = ("<table border=1 cellpadding=3 style='border-collapse:collapse;font-size:12px'><tr>"
-             + "".join(f"<th>{c}</th>" for c in cols) + "</tr>"
-             + "".join("<tr>" + "".join(f"<td>{fmt(r[c])}</td>" for c in cols) + "</tr>" for r in rows) + "</table>")
+    fmt = lambda v: ("n/a" if not np.isfinite(v) else f"{v:.4g}") if isinstance(v, (float, np.floating)) else str(v)
+
+    def html_table(rs, cs):
+        return ("<table border=1 cellpadding=3 style='border-collapse:collapse;font-size:12px'><tr>"
+                + "".join(f"<th>{c}</th>" for c in cs) + "</tr>"
+                + "".join("<tr>" + "".join(f"<td>{fmt(r[c])}</td>" for c in cs) + "</tr>" for r in rs) + "</table>")
+
+    table = html_table(rows, cols)
+    snr_table = html_table(snr_rows, list(snr_rows[0]))
+    sensor_table = html_table([{"metric": k, "value": v} for k, v in sensor.items()], ["metric", "value"])
     html = ["<html><body style='font-family:sans-serif;max-width:1150px;margin:auto'>",
             f"<h1>NDR test: {meta['sensor']}{' (simulated)' if meta.get('fake') else ''}</h1>",
             f"<p>{meta['reads']} reads per reset, {meta['interval_ms']:g} ms apart; full well {meta['full_well']}; "
@@ -163,7 +245,20 @@ def main():
             "<p>min_increment_z is the smallest read-to-read rise in units of its noise: strongly negative means a "
             "read lost signal, which suggests it was destructive. In the dark the rise per read is tiny, so expect "
             "z near 0 there. slope_ratio compares NDR with destructive readout (expect ≈ 1). max_read_vs_ref "
-            "compares each read with the reference capture at the same exposure.</p>", table]
+            "compares each read with the reference capture at the same exposure.</p>", table,
+            "<h2>SNR</h2>",
+            "<p>Each estimator measures the same exposure, ending at the last read (integration_ms). "
+            "Signal is the ROI mean. Noise is temporal: the per-pixel variance across repeats, pooled over the "
+            "ROI, so fixed-pattern noise is excluded. spatial_spread_pct is the spatial spread of the per-pixel slope "
+            "across the ROI: it equals fixed-pattern noise (PRNU/DSNU) only when the ROI is evenly lit. <b>ramp</b>: slope fitted through all reads × integration time. <b>cds</b>: last "
+            "read − first read (covers less integration than the ramp). <b>single</b>: one destructive reference "
+            "frame minus the dark reference, i.e. what a normal capture gives. ramp_vs_single > 1 is the SNR "
+            "gained by NDR. Needs ≥ 2 repeats (and ≥ 2 reference frames for single); otherwise n/a.</p>",
+            snr_table,
+            "<h2>Sensor metrics</h2>",
+            "<p>read_noise_adu: dark second-difference noise. conversion_gain from the bright CDS photon transfer, "
+            "var = gain × mean + 2 × read_noise² (approximate: one signal level, assumes shot-noise-limited "
+            "otherwise). dynamic_range_db = 20·log10((saturation − bias) / read noise).</p>", sensor_table]
     for state, ramp_png, map_png in sections:
         html += [f"<h2>{state}</h2>", f"<img src='data:image/png;base64,{ramp_png}'>",
                  f"<img src='data:image/png;base64,{map_png}'>"]
@@ -172,6 +267,10 @@ def main():
         print(f"{r['light']:6s} rep {r['repeat']}: slope {r['ndr_slope_adu_per_ms']:.4g} ADU/ms "
               f"(ref {r['ref_slope_adu_per_ms']:.4g}), R² {r['r2']:.4f}, min inc z {r['min_increment_z']:.1f}, "
               f"noise {r['noise_adu']:.2f} ADU")
+    for r in snr_rows:
+        print(f"{r['light']:6s} SNR at {r['integration_ms']:g} ms: ramp {r['snr_ramp']:.4g}, CDS {r['snr_cds']:.4g}, "
+              f"single {r['snr_single']:.4g} (ramp/single {r['ramp_vs_single']:.3g})")
+    print("sensor: " + ", ".join(f"{k} {v:.4g}" for k, v in sensor.items()))
     print("report:", args.session / "report.html")
 
 

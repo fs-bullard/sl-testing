@@ -4,6 +4,7 @@ Run from the repo root:
   python -m tests.blooming.capture --sensor M4 --iface usb
   python -m tests.blooming.capture --sensor M5 --iface gige --pvcfg C:\\path\\cfg.pvcfg
   python -m tests.blooming.capture --sensor test --fake
+Or use the GUI: python capture_gui.py
 Settings: low full well, no DDS, 3 frames per trigger (averaged in analysis).
 """
 import argparse
@@ -16,6 +17,7 @@ import tifffile
 from sl_common import CameraDevice, output_dir
 from sl_common.camera import resolve_interface
 from sl_common.fake import FakeSLDevice
+from sl_common.ui import ConsoleUI
 
 EXPOSURES_MS = [100, 200, 500, 750, 1000, 2000, 3000, 4000, 5000, 7000, 10000]
 SATURATION = 2**14 - 1
@@ -27,30 +29,38 @@ SENSOR_REGISTERS = {
 }
 
 
-def set_led(cam, on):
+def set_led(cam, on, ui):
     if hasattr(cam.device, "led_on"):
         cam.device.led_on = on
     else:
-        input(f"Turn the LED {'ON' if on else 'OFF'} (box stays in place), then press Enter... ")
+        ui.prompt(f"Turn the LED {'ON' if on else 'OFF'} (box stays in place).")
 
 
-def main():
+def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--sensor", required=True, help="name used for the output folder")
     p.add_argument("--iface", choices=["usb", "gige"], default="usb")
     p.add_argument("--pvcfg", help="Pleora .pvcfg path (GigE only)")
     p.add_argument("--exposures", type=float, nargs="+", default=EXPOSURES_MS)
     p.add_argument("--frames", type=int, default=3)
-    p.add_argument("--fake", action="store_true")
-    args = p.parse_args()
+    p.add_argument("--fake", action="store_true", help="simulated detector, no hardware")
+    return p
 
+
+def run(args, ui=None):
+    """Capture a blooming session; returns the session folder."""
+    ui = ui or ConsoleUI()
     cam = CameraDevice(device=FakeSLDevice() if args.fake else None,
                        iface=None if args.fake else resolve_interface(args.iface))
     out = output_dir(f"blooming/{args.sensor}")
     meta = {"sensor": args.sensor, "iface": args.iface, "full_well": "Low", "dds": False,
             "frames_per_trigger": args.frames, "captures": []}
 
+    total, done = 2 * len(args.exposures), 0
+
     def capture(kind, exp):
+        nonlocal done
+        ui.check_stop()
         x, y = cam.dims()
         t0 = cam.temperature()
         image = cam.acquire(x, y, args.frames, exp, full_well="Low")
@@ -64,9 +74,12 @@ def main():
             "temp_after": cam.temperature(), "saturated_pixels": int((frames >= SATURATION).sum()),
             "time": time.time()})
         (out / "meta.json").write_text(json.dumps(meta, indent=2))
-        print(f"{kind:6s} {exp:7g} ms  mean {frames.mean():8.1f}  std {frames.std():7.1f}  "
-              f"T {t0} -> {meta['captures'][-1]['temp_after']}  "
-              f"saturated px {meta['captures'][-1]['saturated_pixels']}")
+        ui.log(f"{kind:6s} {exp:7g} ms  mean {frames.mean():8.1f}  std {frames.std():7.1f}  "
+               f"T {t0} -> {meta['captures'][-1]['temp_after']}  "
+               f"saturated px {meta['captures'][-1]['saturated_pixels']}")
+        ui.frame(frames, f"{kind} {exp:g} ms")
+        done += 1
+        ui.progress(done, total)
 
     cam.open_camera(pvcfg_path=args.pvcfg)
     try:
@@ -74,18 +87,23 @@ def main():
         for addr, value in SENSOR_REGISTERS.get(args.sensor.upper(), {}).items():
             cam.register_write(addr, value)
             meta.setdefault("registers", {})[addr] = value
-        set_led(cam, False)
+        set_led(cam, False, ui)
         for exp in args.exposures:
             capture("dark", exp)
-        set_led(cam, True)
+        set_led(cam, True, ui)
         try:
             for exp in args.exposures:
                 capture("bright", exp)
         finally:
-            set_led(cam, False)
+            set_led(cam, False, ui)
     finally:
         cam.close_camera()
-    print("saved to", out)
+    ui.log(f"saved to {out}")
+    return out
+
+
+def main():
+    run(build_parser().parse_args())
 
 
 if __name__ == "__main__":

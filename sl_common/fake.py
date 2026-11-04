@@ -39,6 +39,8 @@ class FakeSLDevice:
         SLImage=FakeSLImage, FullWellModes=FullWellModes, ExposureModes=ExposureModes, SLError=SLError
     )
     X, Y = 256, 384
+    READ_NOISE_ADU = 3.0
+    GAIN_ADU_PER_E = 0.25  # sets shot noise
 
     def __init__(self):
         self._ok = SLError.SL_ERROR_SUCCESS
@@ -82,7 +84,9 @@ class FakeSLDevice:
     def AcquireImage(self, image, frame=0, timeout=1000):
         t = self.exposure_ms
         h, w = image.frames[frame].shape
-        raw = self.signal(t, h, w) + np.random.normal(0, 3, (h, w))
+        mean = self.signal(t, h, w)
+        shot_var = np.maximum(mean - self.signal(0, h, w), 0) * self.GAIN_ADU_PER_E
+        raw = mean + np.random.normal(0, np.sqrt(shot_var + self.READ_NOISE_ADU ** 2))
         if self.led_on:
             self.temp += 0.002 * t / 1000
         image.frames[frame] = np.clip(raw, 0, FULL_SCALE).astype(np.uint16)
