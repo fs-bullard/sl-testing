@@ -1,6 +1,6 @@
 """Non-destructive readout (NDR) capture over GigE.
 
-  python -m tests.ndr.capture --sensor M5 --pvcfg C:\\path\\cfg.pvcfg
+  python -m tests.ndr.capture --sensor M5
   python -m tests.ndr.capture --sensor test --fake
 
 For each light state (dark, then bright):
@@ -42,7 +42,7 @@ def save_stack(path, frames):
 def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--sensor", required=True, help="name used for the output folder")
-    p.add_argument("--pvcfg", help="Pleora .pvcfg path (required on hardware)")
+    p.add_argument("--pvcfg", help="optional Pleora .pvcfg path (GigE)")
     p.add_argument("--reads", type=int, default=10, help="NDR reads per reset")
     p.add_argument("--interval", type=float, default=100, help="ms between NDR reads")
     p.add_argument("--repeats", type=int, default=3, help="NDR integrations per light state")
@@ -57,8 +57,6 @@ def build_parser():
 def run(args, ui=None):
     """Capture an NDR session; returns the session folder."""
     ui = ui or ConsoleUI()
-    if not args.fake and not args.pvcfg:
-        raise ValueError("--pvcfg is required for the GigE detector (or use --fake)")
 
     cam = CameraDevice(device=FakeSLDevice() if args.fake else None,
                        iface=None if args.fake else resolve_interface("gige"))
@@ -126,12 +124,7 @@ def run(args, ui=None):
 
 
 def main():
-    p = build_parser()
-    args = p.parse_args()
-    try:
-        run(args)
-    except ValueError as e:
-        p.error(str(e))
+    run(build_parser().parse_args())
 
 
 if __name__ == "__main__":
