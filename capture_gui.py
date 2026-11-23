@@ -10,8 +10,9 @@ already in progress finishes first). "Analyse" runs the test's analysis script o
 and opens its report.
 
 Viewer: every capture of the session is kept (block-averaged to at most PREVIEW_MAX_PX, so
-memory stays small) and can be scrolled with the slider or the Left/Right keys, frame by frame
-or as the mean of its frames. Drag a rectangle on the image to set an ROI: the plots below show
+memory stays small). The slider (or Left/Right keys) scrolls through the frames of the current
+capture, e.g. the reads of one NDR integration; the capture picker (or Up/Down keys) moves between
+captures such as NDR repeats or exposures. "mean of frames" shows the average instead. Drag a rectangle on the image to set an ROI: the plots below show
 its mean across all captures and across the frames of the current capture (z-profiles).
 "Load session…" fills the viewer from a saved session folder, or any folder of TIFFs.
 
@@ -51,6 +52,7 @@ SETTINGS = ROOT / "output" / "gui_settings.json"
 CAPTURES = {
     "Blooming": ("tests.blooming.capture", "tests.blooming.analyze", "blooming"),
     "NDR (GigE)": ("tests.ndr.capture", "tests.ndr.analyze", "ndr"),
+    "NDR sequence (GigE)": ("tests.ndr.sequence", None, "ndr_sequence"),
 }
 PREVIEW_MAX_PX = 600
 SAT = 2**14 - 1
@@ -218,7 +220,8 @@ class App:
         self.last_out = None
         self.fields = []
         self.captures = []  # viewer history: dicts from GuiUI.frame
-        self.idx = 0
+        self.idx = 0  # current capture
+        self.fidx = 0  # current frame within it
         self.roi = None  # (x0, y0, x1, y1) in full-resolution pixels
         self.im = None
         try:
@@ -276,21 +279,31 @@ class App:
         sb.pack(side="right", fill="y")
         self.log_text.pack(fill="both", expand=True)
 
-        nav = ttk.Frame(right)
-        nav.pack(fill="x")
-        ttk.Button(nav, text="◀", width=3, command=lambda: self.step(-1)).pack(side="left")
-        self.slider = tk.Scale(nav, orient="horizontal", from_=0, to=0, showvalue=False, command=self.on_slider)
-        self.slider.pack(side="left", fill="x", expand=True, padx=4)
-        ttk.Button(nav, text="▶", width=3, command=lambda: self.step(1)).pack(side="left")
-        self.pos = tk.StringVar(value="0 / 0")
-        ttk.Label(nav, textvariable=self.pos, width=9).pack(side="left", padx=4)
-        ttk.Label(nav, text="frame").pack(side="left")
-        self.frame_sel = tk.StringVar(value="mean")
-        self.frame_box = ttk.Combobox(nav, textvariable=self.frame_sel, values=["mean"], state="readonly", width=6)
-        self.frame_box.pack(side="left", padx=4)
-        self.frame_box.bind("<<ComboboxSelected>>", lambda e: self.show_current())
+        cap_nav = ttk.Frame(right)
+        cap_nav.pack(fill="x")
+        ttk.Label(cap_nav, text="capture", width=8).pack(side="left")
+        ttk.Button(cap_nav, text="▲", width=3, command=lambda: self.step_capture(-1)).pack(side="left")
+        self.cap_box = ttk.Combobox(cap_nav, state="readonly", width=34)
+        self.cap_box.pack(side="left", padx=4)
+        self.cap_box.bind("<<ComboboxSelected>>", lambda e: self.goto_capture(self.cap_box.current()))
+        ttk.Button(cap_nav, text="▼", width=3, command=lambda: self.step_capture(1)).pack(side="left")
+        self.cap_pos = tk.StringVar(value="0 / 0")
+        ttk.Label(cap_nav, textvariable=self.cap_pos, width=9).pack(side="left", padx=4)
         self.follow = tk.BooleanVar(value=True)
-        ttk.Checkbutton(nav, text="follow new", variable=self.follow).pack(side="left", padx=(6, 0))
+        ttk.Checkbutton(cap_nav, text="follow new", variable=self.follow).pack(side="left", padx=(6, 0))
+
+        frame_nav = ttk.Frame(right)
+        frame_nav.pack(fill="x")
+        ttk.Label(frame_nav, text="frame", width=8).pack(side="left")
+        ttk.Button(frame_nav, text="◀", width=3, command=lambda: self.step_frame(-1)).pack(side="left")
+        self.slider = tk.Scale(frame_nav, orient="horizontal", from_=1, to=1, showvalue=False, command=self.on_slider)
+        self.slider.pack(side="left", fill="x", expand=True, padx=4)
+        ttk.Button(frame_nav, text="▶", width=3, command=lambda: self.step_frame(1)).pack(side="left")
+        self.frame_pos = tk.StringVar(value="0 / 0")
+        ttk.Label(frame_nav, textvariable=self.frame_pos, width=9).pack(side="left", padx=4)
+        self.show_mean = tk.BooleanVar(value=False)
+        ttk.Checkbutton(frame_nav, text="mean of frames", variable=self.show_mean,
+                        command=self.show_current_if_any).pack(side="left", padx=(6, 0))
 
         self.fig = Figure(figsize=(6, 4.6))
         self.ax = self.fig.add_subplot(111)
@@ -312,8 +325,10 @@ class App:
         self.zcanvas = FigureCanvasTkAgg(self.zfig, master=right)
         self.zcanvas.get_tk_widget().pack(fill="x")
         self.update_profile()
-        root.bind("<Left>", lambda e: self.key_step(-1))
-        root.bind("<Right>", lambda e: self.key_step(1))
+        root.bind("<Left>", lambda e: self.key_step(self.step_frame, -1))
+        root.bind("<Right>", lambda e: self.key_step(self.step_frame, 1))
+        root.bind("<Up>", lambda e: self.key_step(self.step_capture, -1))
+        root.bind("<Down>", lambda e: self.key_step(self.step_capture, 1))
 
         self.build_form()
         self.root.after(50, self.poll)
@@ -366,7 +381,9 @@ class App:
 
     def launch(self, fn, arg, status):
         """Run fn(arg, ui) in the worker thread; the viewer starts a fresh history."""
-        self.captures, self.idx, self.im = [], 0, None
+        self.captures, self.idx, self.fidx, self.im = [], 0, 0, None
+        self.cap_box.configure(values=[])
+        self.cap_box.set("")
         self.stop.clear()
         self.progress.configure(value=0, maximum=1)
         self.set_running(True, status)
@@ -440,42 +457,57 @@ class App:
     def add_capture(self, cap):
         self.captures.append(cap)
         n = len(self.captures)
-        self.slider.configure(to=n - 1)
+        self.cap_box.configure(values=[f"{i + 1}: {c['label']}" for i, c in enumerate(self.captures)])
         if self.follow.get() or n == 1:
-            self.idx = n - 1
-            self.slider.set(self.idx)
-            self.show_current()
+            self.goto_capture(n - 1)
         else:
-            self.pos.set(f"{self.idx + 1} / {n}")
+            self.cap_pos.set(f"{self.idx + 1} / {n}")
             self.update_profile()
 
-    def on_slider(self, value):
-        idx = int(float(value))
-        if self.captures and idx != self.idx:
-            self.idx = idx
-            self.show_current()
+    def goto_capture(self, idx):
+        self.idx = idx
+        self.cap_box.current(idx)
+        n_frames = len(self.captures[idx]["frames"])
+        self.fidx = min(self.fidx, n_frames - 1)
+        self.slider.configure(to=n_frames)
+        self.slider.set(self.fidx + 1)
+        self.show_current()
 
-    def step(self, delta):
+    def step_capture(self, delta):
         if self.captures:
-            self.idx = min(max(self.idx + delta, 0), len(self.captures) - 1)
-            self.slider.set(self.idx)
+            self.goto_capture(min(max(self.idx + delta, 0), len(self.captures) - 1))
+
+    def on_slider(self, value):
+        fidx = int(float(value)) - 1
+        if self.captures and fidx != self.fidx:
+            self.fidx = fidx
             self.show_current()
 
-    def key_step(self, delta):
+    def step_frame(self, delta):
+        if self.captures:
+            self.fidx = min(max(self.fidx + delta, 0), len(self.captures[self.idx]["frames"]) - 1)
+            self.slider.set(self.fidx + 1)
+            self.show_current()
+
+    def key_step(self, fn, delta):
         if not isinstance(self.root.focus_get(), (tk.Entry, ttk.Entry, tk.Text)):
-            self.step(delta)
+            fn(delta)
+
+    def show_current_if_any(self):
+        if self.captures:
+            self.show_current()
 
     def current_image(self, cap=None, frame=None):
+        """frame: 'mean', a 0-based index, or None for what the controls select."""
         cap = cap or self.captures[self.idx]
-        sel = self.frame_sel.get() if frame is None else frame
-        return cap["frames"].mean(0) if sel == "mean" else cap["frames"][int(sel) - 1]
+        if frame is None:
+            frame = "mean" if self.show_mean.get() else self.fidx
+        return cap["frames"].mean(0) if frame == "mean" else cap["frames"][frame]
 
     def show_current(self):
         cap = self.captures[self.idx]
         n_frames = len(cap["frames"])
-        self.frame_box.configure(values=["mean"] + [str(i + 1) for i in range(n_frames)])
-        if self.frame_sel.get() != "mean" and int(self.frame_sel.get()) > n_frames:
-            self.frame_sel.set("mean")
+        self.slider.configure(state="disabled" if self.show_mean.get() else "normal")
         img = self.current_image(cap)
         f = cap["scale"]
         extent = (0, img.shape[1] * f, img.shape[0] * f, 0)  # axes in full-resolution pixels
@@ -489,11 +521,12 @@ class App:
             self.im.set_extent(extent)
         lo, hi = np.percentile(img, [1, 99.5])
         self.im.set_clim(lo, max(hi, lo + 1))
-        frame_txt = "mean of frames" if self.frame_sel.get() == "mean" else f"frame {self.frame_sel.get()}"
+        frame_txt = f"mean of {n_frames} frames" if self.show_mean.get() else f"frame {self.fidx + 1} of {n_frames}"
         self.ax.set_title(f"{cap['label']}  ({frame_txt})", fontsize=10)
         self.canvas.draw_idle()
         st = cap["stats"]
-        self.pos.set(f"{self.idx + 1} / {len(self.captures)}")
+        self.cap_pos.set(f"{self.idx + 1} / {len(self.captures)}")
+        self.frame_pos.set("mean" if self.show_mean.get() else f"{self.fidx + 1} / {n_frames}")
         self.stats.set(f"{st['shape'][2]}×{st['shape'][1]} px, {st['shape'][0]} frame(s)   mean {st['mean']:.1f}   "
                        f"max {st['max']}   saturated px {st['saturated']}")
         self.update_profile()
@@ -559,9 +592,8 @@ class App:
             self.zax_cap.set_xticklabels([c["label"] for c in self.captures], rotation=60, ha="right", fontsize=6)
         self.zax_cap.set_title("ROI mean across captures", fontsize=9)
         self.zax_frame.plot(range(1, len(per_frame) + 1), per_frame, "o-", ms=3, c="tab:green")
-        if self.frame_sel.get() != "mean":
-            k = int(self.frame_sel.get())
-            self.zax_frame.plot([k], [per_frame[k - 1]], "o", c="red", ms=6)
+        if not self.show_mean.get():
+            self.zax_frame.plot([self.fidx + 1], [per_frame[self.fidx]], "o", c="red", ms=6)
         self.zax_frame.set_xlabel("frame", fontsize=8)
         self.zax_frame.set_title("ROI mean across frames of this capture", fontsize=9)
         for a in (self.zax_cap, self.zax_frame):
@@ -601,6 +633,9 @@ class App:
         return Path(path) if path else None
 
     def analyse(self):
+        if CAPTURES[self.test.get()][1] is None:
+            messagebox.showinfo("No analysis", f"{self.test.get()} has no analysis script.")
+            return
         session = self.session_folder()
         if not session:
             return

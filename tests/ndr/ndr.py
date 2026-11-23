@@ -5,7 +5,7 @@ should hold more signal than the last (an "up-the-ramp" sequence). Both backends
 (reads, read_times_ms): reads is uint16 (n, y, x), read_times_ms is the integration time at
 each read, measured from the reset.
 
-NDR is switched on by writing 0 to register 40 and off by writing 1 (NDR_REGISTER).
+NDR is switched on by writing 0 to register 48 and off by writing 1 (NDR_REGISTER).
 SdkNdr is the real-hardware path. How the reads arrive once NDR is on is still an assumption:
 see TODO(NDR) in SdkNdr.acquire. FakeNdr simulates the ramp on FakeSLDevice so capture and
 analysis run without hardware; it makes the same register writes.
@@ -14,7 +14,7 @@ import numpy as np
 
 from sl_common.fake import FULL_SCALE
 
-NDR_REGISTER = 40
+NDR_REGISTER = 48
 NDR_ON, NDR_OFF = 0, 1  # note: 0 enables, 1 disables
 
 
@@ -24,7 +24,7 @@ def nominal_read_times(n_reads, interval_ms):
 
 
 class _RegisterSwitch:
-    """Turns NDR on/off through register 40; shared by the real and fake backends."""
+    """Turns NDR on/off through register 48; shared by the real and fake backends."""
 
     def __init__(self, cam):
         self.cam = cam

@@ -6,7 +6,7 @@
 For each light state (dark, then bright):
   1. Reference: normal destructive captures at each NDR read time, for comparison.
   2. NDR: --repeats integrations, each one reset followed by --reads non-destructive reads.
-NDR is switched with register 40 (0 = on, 1 = off). How the reads are collected once it is on is
+NDR is switched with register 48 (0 = on, 1 = off). How the reads are collected once it is on is
 still an assumption in tests/ndr/ndr.py (TODO(NDR)); with --fake the reads are simulated.
 Analyse with: python -m tests.ndr.analyze <session folder>. Or use the GUI: python capture_gui.py
 """
