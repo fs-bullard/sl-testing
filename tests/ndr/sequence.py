@@ -1,6 +1,6 @@
 """Capture one frame at each of a sequence of exposure times without resetting in between.
 
-  python -m tests.ndr.sequence --sensor M5 --pvcfg C:\\path\\cfg.pvcfg --times 100 200 500 1000
+  python -m tests.ndr.sequence --sensor M5 --times 100 200 500 1000
   python -m tests.ndr.sequence --sensor test --fake
 
 Writes len(--times) to register 48 first, so the sensor resets only after the final capture,
@@ -29,7 +29,7 @@ SATURATION = 2**14 - 1
 def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--sensor", required=True, help="name used for the output folder")
-    p.add_argument("--pvcfg", help="Pleora .pvcfg path (required on hardware)")
+    p.add_argument("--pvcfg", help="optional Pleora .pvcfg path (GigE)")
     p.add_argument("--times", type=float, nargs="+", default=[100, 200, 300, 400, 500],
                    help="exposure time (ms) of each capture, in order")
     p.add_argument("--full-well", choices=["High", "Low"], default="High")
@@ -40,8 +40,6 @@ def build_parser():
 def run(args, ui=None):
     """Capture the sequence; returns the session folder."""
     ui = ui or ConsoleUI()
-    if not args.fake and not args.pvcfg:
-        raise ValueError("--pvcfg is required for the GigE detector (or use --fake)")
 
     cam = CameraDevice(device=FakeSLDevice() if args.fake else None,
                        iface=None if args.fake else resolve_interface("gige"))
@@ -89,12 +87,7 @@ def run(args, ui=None):
 
 
 def main():
-    p = build_parser()
-    args = p.parse_args()
-    try:
-        run(args)
-    except ValueError as e:
-        p.error(str(e))
+    run(build_parser().parse_args())
 
 
 if __name__ == "__main__":
